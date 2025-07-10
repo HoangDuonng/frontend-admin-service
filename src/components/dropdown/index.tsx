@@ -10,7 +10,6 @@ import {
     flip,
     shift,
 } from "@floating-ui/react";
-import Tooltip from "../tooltip";
 
 interface DropdownProps {
     className?: string;
@@ -58,19 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
     return (
         <div>
-            {label && (
-                <div className={`text-sm text-gray-500 mb-2 ${classDropdownLabel}`}>
-                    {label}{" "}
-                    {tooltip && (
-                        <Tooltip
-                            className="ml-1"
-                            title={tooltip}
-                            icon="info"
-                            place="right"
-                        />
-                    )}
-                </div>
-            )}
+           
             <div
                 className={`relative ${small ? "text-sm" : "text-base"
                     } ${className} ${isOpen ? "border-blue-500" : "border-gray-200"

@@ -9,12 +9,14 @@ import AddCircleIcon from '@/icons/interface/outline/add-circle.svg';
 import Home04Icon from '@/icons/interface/outline/home 04.svg';
 import Search02Icon from '@/icons/interface/outline/search 02.svg';
 import RemoveIcon from '@/icons/interface/outline/remove.svg';
+import EditRectangleIcon from '@/icons/interface/outline/edit-rectangle.svg';
+import AddRectangleIcon from '@/icons/interface/outline/add-rectangle.svg';
+import ClearRectangleIcon from '@/icons/interface/outline/clear-rectangle.svg';
 
 import UserCustomerIcon from '@/icons/user/outline/user-circle.svg';
+import UserIcon from '@/icons/user/outline/user.svg';
 
 import ShopIcon from '@/icons/ecommerce/outline/cart.svg';
-
-import UserIcon from '@/icons/user/outline/user.svg';
 
 import LightIcon from '@/icons/device/outline/light mode.svg';
 import DarkIcon from '@/icons/device/outline/night mode.svg';
@@ -22,6 +24,8 @@ import DarkIcon from '@/icons/device/outline/night mode.svg';
 import UpArrowIcon from '@/icons/arrows/solid/up-arrow 01.svg';
 
 import MenuLineIcon from '@/icons/menu/outline/menu-line-horizontal.svg';
+
+import AlignJustifyIcon from '@/icons/editor/outline/align-justify.svg';
 
 const icons = {
     finance_and_payment: {
@@ -39,6 +43,9 @@ const icons = {
         'add-circle': AddCircleIcon,
         'search 02': Search02Icon,
         'remove': RemoveIcon,
+        'edit-rectangle': EditRectangleIcon,
+        'add-rectangle': AddRectangleIcon,
+        'clear-rectangle': ClearRectangleIcon,
         // Thêm icon khác ở đây
     },
     ecommerce: {
@@ -57,6 +64,9 @@ const icons = {
     // Thêm category khác nếu cần
     menu: {
         'menu-line': MenuLineIcon,
+    },
+    editor: {
+        'align-justify': AlignJustifyIcon,
     },
 };
 

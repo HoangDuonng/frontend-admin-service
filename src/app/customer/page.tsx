@@ -11,7 +11,7 @@ import Message from '@/components/customers/Message';
 
 const Customers = () => {
     return (
-        <div className="flex flex-col lg:flex-row gap-2">
+        <div className="flex flex-col lg:flex-row gap-2 mt-10">
             <div className="flex-1 lg:pr-2">
                 <div className="mb-2">
                     <Overview />
@@ -26,8 +26,8 @@ const Customers = () => {
                     <ShareProducts />
                 </div>
             </div>
-            <div className="w-full lg:w-[340px] xl:w-[312px]">
-                <div className="mb-2">
+            <div className="w-full lg:w-[340px] xl:w-[312px] mt-3">
+                <div className="mb-2 ">
                     <RefundRequests
                         title="Refund requests"
                         classTitle="title-red"

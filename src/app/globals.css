@@ -75,3 +75,71 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Loading bar style */
+.loader {
+  width: 120px;
+  height: 22px;
+  border-radius: 20px;
+  color: #93c5fd;
+  /* xanh nhạt chủ đạo */
+  border: 2px solid;
+  position: relative;
+  margin: 0 auto;
+  background: #e0edfd;
+  overflow: hidden;
+}
+
+.loader::before {
+  content: "";
+  position: absolute;
+  margin: 2px;
+  inset: 0 100% 0 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: l6 2s infinite;
+  z-index: 1;
+}
+
+/* Bóng bóng lướt */
+.loader::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle at 60% 40%, #bae6fd 70%, #38bdf8 100%);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  animation: ball-move 2s infinite cubic-bezier(.4, 0, .2, 1);
+  z-index: 2;
+  box-shadow: 0 0 8px 2px #93c5fd66;
+}
+
+@keyframes l6 {
+  100% {
+    inset: 0
+  }
+}
+
+@keyframes ball-move {
+  0% {
+    left: 0;
+    opacity: 0.7;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  80% {
+    left: 100px;
+    opacity: 1;
+  }
+
+  100% {
+    left: 120px;
+    opacity: 0;
+  }
+}

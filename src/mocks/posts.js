@@ -2,158 +2,141 @@ import { progress } from "@/utils";
 
 export const posts = [
   {
-    title:
-      'Hurry up! You got 50% off – all items <span role="img" aria-label="fire">🔥</span>',
-    image: "/images/content/post-pic-1.jpg",
-    image2x: "/images/content/post-pic-1@2x.jpg",
-    picture: true,
-    distribution: 1.2,
-    socials: [
+    id: 1,
+    title: "Những khách sạn lâu đời nhất tại Sài Gòn: Đẳng cấp và sang trọng",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    date: "2024-05-01",
+    status: "published",
+    author: "Admin",
+    content: [
       {
-        title: "facebook",
-        url: "https://www.facebook.com/ui8.net/",
+        type: "heading",
+        text: "1. Khách sạn Continental"
       },
       {
-        title: "twitter",
-        url: "https://twitter.com/ui8",
+        type: "image",
+        src: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+        alt: "Khách sạn Continental"
       },
-    ],
-    linkClicks: {
-      counter: 26,
-      balance: 37.8,
-      progress: progress(),
-    },
-    views: {
-      counter: 256,
-      balance: 17.8,
-      progress: progress(),
-    },
-    engagement: {
-      counter: 15,
-      balance: -37.8,
-      progress: progress(),
-    },
+      {
+        type: "paragraph",
+        text: "Khách sạn Continental là một trong những khách sạn lâu đời nhất Sài Gòn, với hơn 130 năm lịch sử..."
+      },
+      {
+        type: "heading",
+        text: "2. Khách sạn Majestic Sài Gòn"
+      },
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+        alt: "Khách sạn Majestic"
+      },
+      {
+        type: "paragraph",
+        text: "Khách sạn Majestic là một trong những khách sạn lâu đời nhất Sài Gòn, với bề dày lịch sử gần 100 năm..."
+      }
+    ]
   },
   {
-    title: "HTML version has been released",
-    image: "/images/content/post-pic-2.jpg",
-    image2x: "/images/content/post-pic-2@2x.jpg",
-    video: true,
-    distribution: 1.6,
-    socials: [
+    id: 2,
+    title: "Top 5 lễ hội đặc sắc không thể bỏ lỡ tại TP.HCM",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    date: "2024-04-20",
+    status: "draft",
+    author: "Editor",
+    content: [
       {
-        title: "twitter",
-        url: "https://twitter.com/ui8",
+        type: "heading",
+        text: "1. Lễ hội Ánh sáng"
       },
-    ],
-    linkClicks: {
-      counter: 16,
-      balance: 24.5,
-      progress: progress(),
-    },
-    views: {
-      counter: 334,
-      balance: -1.8,
-      progress: progress(),
-    },
-    engagement: {
-      counter: 15,
-      balance: +12.9,
-      progress: progress(),
-    },
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80",
+        alt: "Lễ hội Ánh sáng"
+      },
+      {
+        type: "paragraph",
+        text: "Lễ hội Ánh sáng là sự kiện thu hút hàng ngàn du khách mỗi năm..."
+      },
+      {
+        type: "heading",
+        text: "2. Lễ hội Bánh dân gian"
+      },
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80",
+        alt: "Lễ hội Bánh dân gian"
+      },
+      {
+        type: "paragraph",
+        text: "Lễ hội Bánh dân gian là dịp để tôn vinh ẩm thực truyền thống..."
+      }
+    ]
   },
   {
-    title:
-      'Hurry up! You got 50% off – all items <span role="img" aria-label="fire">🔥</span>',
-    image: "/images/content/post-pic-3.jpg",
-    image2x: "/images/content/post-pic-3@2x.jpg",
-    picture: true,
-    distribution: -1.5,
-    socials: [
+    id: 3,
+    title: "Cẩm nang du lịch Sài Gòn cho người mới",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    date: "2024-03-15",
+    status: "published",
+    author: "Admin",
+    content: [
       {
-        title: "facebook",
-        url: "https://www.facebook.com/ui8.net/",
+        type: "heading",
+        text: "1. Chuẩn bị trước chuyến đi"
       },
       {
-        title: "twitter",
-        url: "https://twitter.com/ui8",
+        type: "image",
+        src: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+        alt: "Chuẩn bị trước chuyến đi"
       },
-    ],
-    linkClicks: {
-      counter: 123,
-      balance: -14.5,
-      progress: progress(),
-    },
-    views: {
-      counter: 98,
-      balance: -12.8,
-      progress: progress(),
-    },
-    engagement: {
-      counter: 25,
-      balance: +1.8,
-      progress: progress(),
-    },
+      {
+        type: "paragraph",
+        text: "Trước khi đến Sài Gòn, bạn nên chuẩn bị kỹ lưỡng về hành lý, giấy tờ..."
+      },
+      {
+        type: "heading",
+        text: "2. Địa điểm không thể bỏ qua"
+      },
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80",
+        alt: "Địa điểm không thể bỏ qua"
+      },
+      {
+        type: "paragraph",
+        text: "Những địa điểm nổi bật như Nhà thờ Đức Bà, Bưu điện Thành phố, Chợ Bến Thành..."
+      }
+    ]
   },
   {
-    title: "HTML version has been released",
-    image: "/images/content/post-pic-4.jpg",
-    image2x: "/images/content/post-pic-4@2x.jpg",
-    video: true,
-    distribution: 1.9,
-    socials: [
-      {
-        title: "twitter",
-        url: "https://twitter.com/ui8",
-      },
-    ],
-    linkClicks: {
-      counter: 16,
-      balance: 24.5,
-      progress: progress(),
-    },
-    views: {
-      counter: 334,
-      balance: -1.8,
-      progress: progress(),
-    },
-    engagement: {
-      counter: 15,
-      balance: +12.9,
-      progress: progress(),
-    },
+    id: 4,
+    title: "Cẩm nang du lịch Sài Gòn cho người mới",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    description: "Tất tần tật kinh nghiệm, mẹo nhỏ và địa điểm không thể bỏ qua khi du lịch Sài Gòn lần đầu tiên.",
+    date: "2024-03-15",
+    status: "published",
+    author: "Admin",
+    link: "https://visithcmc.vn/tin-tuc/cam-nang-du-lich-sai-gon"
   },
   {
-    title:
-      'Hurry up! You got 50% off – all items <span role="img" aria-label="fire">🔥</span>',
-    image: "/images/content/post-pic-5.jpg",
-    image2x: "/images/content/post-pic-5@2x.jpg",
-    picture: true,
-    distribution: -1.1,
-    socials: [
-      {
-        title: "facebook",
-        url: "https://www.facebook.com/ui8.net/",
-      },
-      {
-        title: "twitter",
-        url: "https://twitter.com/ui8",
-      },
-    ],
-    linkClicks: {
-      counter: 55,
-      balance: 14.5,
-      progress: progress(),
-    },
-    views: {
-      counter: 78,
-      balance: 12.8,
-      progress: progress(),
-    },
-    engagement: {
-      counter: -25,
-      balance: +1.8,
-      progress: progress(),
-    },
+    id: 5,
+    title: "Cẩm nang du lịch Sài Gòn cho người mới",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    description: "Tất tần tật kinh nghiệm, mẹo nhỏ và địa điểm không thể bỏ qua khi du lịch Sài Gòn lần đầu tiên.",
+    date: "2024-03-15",
+    status: "published",
+    author: "Admin",
+    link: "https://visithcmc.vn/tin-tuc/cam-nang-du-lich-sai-gon"
+  },
+  {
+    id: 6,
+    title: "Cẩm nang du lịch Sài Gòn cho người mới",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    description: "Tất tần tật kinh nghiệm, mẹo nhỏ và địa điểm không thể bỏ qua khi du lịch Sài Gòn lần đầu tiên.",
+    date: "2024-03-15",
+    status: "published",
+    author: "Admin",
+    link: "https://visithcmc.vn/tin-tuc/cam-nang-du-lich-sai-gon"
   },
 ];

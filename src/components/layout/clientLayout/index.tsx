@@ -14,7 +14,7 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
             <Header setSidebarOpen={setSidebarOpen} />
             <div className="flex flex-1">
                 <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-                <main className="pt-16 p-4 md:p-8 flex-1 flex flex-col bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:ml-52 transition-all duration-300">
+                <main className="pt-16 p-4 md:p-8 flex-1 flex flex-col bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:ml-64 transition-all duration-300">
                     {children}
                 </main>
             </div>
