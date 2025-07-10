@@ -11,7 +11,7 @@ import ProductViews from "@/components/productViews";
 export default function Home() {
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 mt-10">
         <div className="flex-[7] space-y-4">
           <Overview className="bg-white rounded-lg shadow p-4" />
           <ProductViews className="bg-white rounded-lg shadow p-4" />
