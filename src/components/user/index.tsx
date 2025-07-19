@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Icon from "../icon";
+import Image from "next/image";
 
 interface User {
     title: string;
@@ -54,7 +55,14 @@ const Users: React.FC<UsersProps> = ({ className }) => {
                         className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500"
                     >
                         <div className="w-12 h-12 rounded-full overflow-hidden mb-2">
-                            <img src={x.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                            <Image
+                                src={x.avatar}
+                                alt="Avatar"
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                            />
                         </div>
                         <div className="text-sm font-medium text-gray-900">{x.title}</div>
                     </Link>

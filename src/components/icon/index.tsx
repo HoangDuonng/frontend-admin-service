@@ -12,6 +12,12 @@ import RemoveIcon from '@/icons/interface/outline/remove.svg';
 import EditRectangleIcon from '@/icons/interface/outline/edit-rectangle.svg';
 import AddRectangleIcon from '@/icons/interface/outline/add-rectangle.svg';
 import ClearRectangleIcon from '@/icons/interface/outline/clear-rectangle.svg';
+import GlobeIcon from '@/icons/interface/outline/globe.svg';
+import CompassIcon from '@/icons/interface/outline/compass.svg';
+import LocationIcon from '@/icons/interface/outline/location 01.svg';
+import CalendarIcon from '@/icons/interface/outline/calendar.svg';
+import InteractiveIcon from '@/icons/interface/outline/interactive.svg';
+import NotificationRingingIcon from '@/icons/interface/outline/notification-ringing.svg';
 
 import UserCustomerIcon from '@/icons/user/outline/user-circle.svg';
 import UserIcon from '@/icons/user/outline/user.svg';
@@ -46,6 +52,12 @@ const icons = {
         'edit-rectangle': EditRectangleIcon,
         'add-rectangle': AddRectangleIcon,
         'clear-rectangle': ClearRectangleIcon,
+        'globe': GlobeIcon,
+        'compass': CompassIcon,
+        'location 01': LocationIcon,
+        'calendar': CalendarIcon,
+        'interactive': InteractiveIcon,
+        'notification-ringing': NotificationRingingIcon,
         // Thêm icon khác ở đây
     },
     ecommerce: {

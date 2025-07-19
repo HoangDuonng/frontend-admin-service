@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { getTours } from "@/services/tourService";
+import { getTours, updateTour, deleteTour } from "@/services/tourService";
 import Link from "next/link";
 import type { Tour } from "@/types/tour";
 import Loader from "@/components/loader/page";
 import Pagination from "@/components/pagination/Pagination";
+import { message } from 'antd';
 
 export default function TourListClient() {
     const [tours, setTours] = useState<Tour[]>([]);
@@ -16,8 +17,10 @@ export default function TourListClient() {
     const totalPages = Math.ceil(tours.length / pageSize);
     const pagedTours = tours.slice((page - 1) * pageSize, page * pageSize);
     const [editingTour, setEditingTour] = useState<Tour | null>(null);
-    const [editForm, setEditForm] = useState({ title: '', description: '', status: 'active' });
+    const [editForm, setEditForm] = useState({ title: '', description: '', status: 'active', type: 'explore_tour' as 'explore_tour' | 'main_banner' });
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deletingTour, setDeletingTour] = useState<Tour | null>(null);
 
     useEffect(() => {
         getTours().then(data => {
@@ -38,6 +41,21 @@ export default function TourListClient() {
             prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
         );
     };
+
+    async function reloadToursWithRetry(retries = 5, delay = 1000) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                setLoading(true);
+                const data = await getTours();
+                setTours(data);
+                setLoading(false);
+                return;
+            } catch (err) {
+                if (i === retries - 1) throw err;
+                await new Promise(res => setTimeout(res, delay));
+            }
+        }
+    }
 
     return (
         <div className="p-8">
@@ -68,6 +86,7 @@ export default function TourListClient() {
                             <th className="p-3 text-center">Tên tour</th>
                             <th className="p-3 text-center">Mô tả</th>
                             <th className="p-3 text-center">Status</th>
+                            <th className="p-3 text-center">Nơi hiển thị</th>
                             <th className="p-3 text-center">Ngày tạo</th>
                             <th className="p-3 text-center">Thao tác</th>
                         </tr>
@@ -101,6 +120,13 @@ export default function TourListClient() {
                                             <span className="inline-block px-2 py-1 text-xs rounded bg-gray-200 text-gray-500">Inactive</span>
                                         )}
                                     </td>
+                                    <td className="p-3 text-center">
+                                        {tour.type === 'main_banner' ? (
+                                            <span className="inline-block px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">Main Banner</span>
+                                        ) : (
+                                            <span className="inline-block px-2 py-1 text-xs rounded bg-gray-100 text-gray-700">Explore Tour</span>
+                                        )}
+                                    </td>
                                     <td className="p-3 font-mono text-center">
                                         {tour.createdAt ? new Date(tour.createdAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}
                                     </td>
@@ -113,12 +139,20 @@ export default function TourListClient() {
                                                     title: tour.title,
                                                     description: tour.description,
                                                     status: tour.status || 'active',
+                                                    type: tour.type || 'explore_tour',
                                                 });
                                             }}
                                         >
                                             Sửa
                                         </button>
-                                        <button className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors text-xs font-semibold">Xoá</button>
+                                        <button className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors text-xs font-semibold"
+                                            onClick={() => {
+                                                setDeletingTour(tour);
+                                                setShowDeleteConfirm(true);
+                                            }}
+                                        >
+                                            Xoá
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -167,6 +201,17 @@ export default function TourListClient() {
                                     <option value="inactive">Inactive</option>
                                 </select>
                             </div>
+                            <div>
+                                <label className="block text-sm font-semibold mb-1 text-blue-700">Nơi hiển thị</label>
+                                <select
+                                    className="w-full border rounded px-3 py-2"
+                                    value={editForm.type}
+                                    onChange={e => setEditForm(f => ({ ...f, type: e.target.value as 'explore_tour' | 'main_banner' }))}
+                                >
+                                    <option value="explore_tour">Explore Tour</option>
+                                    <option value="main_banner">Main Banner</option>
+                                </select>
+                            </div>
                         </div>
                         <div className="flex justify-end gap-2 mt-8">
                             <button
@@ -177,43 +222,80 @@ export default function TourListClient() {
                             </button>
                             <button
                                 className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-                                onClick={() => setShowConfirm(true)}
+                                onClick={async () => {
+                                    if (editingTour) {
+                                        const hide = message.loading('Đang lưu thay đổi...', 0);
+                                        try {
+                                            await updateTour(editingTour.tourId, editForm);
+                                            message.success('Cập nhật tour thành công!');
+                                            setLoading(true);
+                                            getTours().then(data => {
+                                                setTours(data);
+                                                setLoading(false);
+                                            });
+                                        } catch (err) {
+                                            message.error('Có lỗi khi cập nhật tour!');
+                                        } finally {
+                                            hide();
+                                            setShowConfirm(false);
+                                            setEditingTour(null);
+                                        }
+                                    } else {
+                                        setShowConfirm(false);
+                                        setEditingTour(null);
+                                    }
+                                }}
                             >
-                                Lưu thay đổi
+                                Cập nhật tour 360°
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Modal xác nhận sửa */}
-            {showConfirm && (
+            {/* Modal xác nhận xoá */}
+            {showDeleteConfirm && deletingTour && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-                    <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-sm border-2 border-blue-500 text-center">
-                        <h3 className="text-xl font-bold mb-4 text-blue-700">Xác nhận sửa tour?</h3>
+                    <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-sm border-2 border-red-500 text-center">
+                        <h3 className="text-xl font-bold mb-4 text-red-700">Xác nhận xoá tour?</h3>
+                        <p className="mb-4 text-red-600 font-semibold">
+                            Hành động này <span className="underline">không thể hoàn tác</span>!<br />
+                            Toàn bộ dữ liệu và source 360° sẽ bị xoá vĩnh viễn.
+                        </p>
                         <p className="mb-6">
-                            Bạn có chắc muốn lưu thay đổi cho tour
-                            <span className="font-semibold text-blue-700"> [
-                                {editingTour?.tourId}]
-                                {editForm.title ? ` - ${editForm.title}` : ''}
-                                </span>?
+                            Bạn có chắc muốn xoá tour
+                            <span className="font-semibold text-blue-700"> [{deletingTour.tourId}] {deletingTour.title ? `- ${deletingTour.title}` : ''}</span>?
                         </p>
                         <div className="flex justify-center gap-4">
                             <button
                                 className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                onClick={() => setShowConfirm(false)}
+                                onClick={() => {
+                                    setShowDeleteConfirm(false);
+                                    setDeletingTour(null);
+                                }}
                             >
                                 Huỷ
                             </button>
                             <button
-                                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-                                onClick={() => {
-                                    setShowConfirm(false);
-                                    setEditingTour(null);
-                                    // TODO: Gọi API cập nhật ở đây nếu cần
+                                className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+                                onClick={async () => {
+                                    if (deletingTour) {
+                                        const hide = message.loading('Đang xoá tour...', 0);
+                                        try {
+                                            await deleteTour(deletingTour.tourId);
+                                            message.success('Đã xoá tour thành công!');
+                                            reloadToursWithRetry();
+                                        } catch (err) {
+                                            message.error('Có lỗi khi xoá tour!');
+                                        } finally {
+                                            hide();
+                                            setShowDeleteConfirm(false);
+                                            setDeletingTour(null);
+                                        }
+                                    }
                                 }}
                             >
-                                Xác nhận
+                                Xác nhận xoá
                             </button>
                         </div>
                     </div>

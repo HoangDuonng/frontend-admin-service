@@ -18,6 +18,7 @@ export default function TourManager() {
     const [uploadedTourId, setUploadedTourId] = useState<string | null>(null);
     const [nextTourId, setNextTourId] = useState('tour01');
     const [embedError, setEmbedError] = useState(false);
+    const [type, setType] = useState<'main_banner' | 'explore_tour'>('explore_tour');
 
     const updateNextTourId = async () => {
         const tours = await getTours();
@@ -50,7 +51,7 @@ export default function TourManager() {
             if (isZip) {
                 setSelectedFile(file);
             } else {
-                alert('Vui lòng chọn file ZIP hợp lệ');
+                message.error('Vui lòng chọn file ZIP hợp lệ');
             }
         }
     };
@@ -81,6 +82,7 @@ export default function TourManager() {
                 description,
                 tags,
                 tourId,
+                type,
                 onProgress: setUploadProgress,
             });
             setIsUploading(false);
@@ -194,6 +196,19 @@ export default function TourManager() {
                                 placeholder="panorama, biển, núi..."
                             />
                         </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Nơi hiển thị <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                value={type}
+                                onChange={e => setType(e.target.value as 'main_banner' | 'explore_tour')}
+                            >
+                                <option value="explore_tour">Explore Tour</option>
+                                <option value="main_banner">Main Banner</option>
+                            </select>
+                        </div>
                     </div>
 
                     {isUploading && (
@@ -246,6 +261,7 @@ export default function TourManager() {
                                 setTitle('');
                                 setDescription('');
                                 setTags('');
+                                setType('explore_tour');
                                 setUploadedTourId(null);
                                 setUploadProgress(0);
                                 setEmbedError(false);

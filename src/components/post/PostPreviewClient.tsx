@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Loader from "@/components/loader/page";
+import Image from 'next/image';
 
 export default function PostPreviewClient({ slug }: { slug: string }) {
     const router = useRouter();
@@ -52,7 +53,16 @@ export default function PostPreviewClient({ slug }: { slug: string }) {
     return (
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 mt-8">
             <button onClick={() => router.push('/cms/tin-tuc')} className="mb-4 px-4 py-2 rounded bg-blue-200 text-gray-700 hover:bg-gray-300">← Quay lại</button>
-            {post.image && <img src={post.image} alt={post.title} className="w-full h-64 object-cover rounded-lg mb-6" />}
+            {post.image && (
+                <Image
+                    src={post.image}
+                    alt={post.title}
+                    width={800}
+                    height={400}
+                    className="w-full h-64 object-cover rounded-lg mb-6"
+                    priority
+                />
+            )}
             <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
             <div className="flex gap-4 text-sm text-gray-500 mb-4">
                 <span>Ngày đăng: {formatDate(post.date)}</span>
@@ -65,7 +75,17 @@ export default function PostPreviewClient({ slug }: { slug: string }) {
             </div>
             {post?.content?.map((section: any, idx: number) => {
                 if (section.type === "heading") return <h2 key={idx} className="text-xl font-bold mt-6 mb-2">{section.text}</h2>;
-                if (section.type === "image") return <img key={idx} src={section.src} alt={section.alt} className="w-full rounded-lg my-4" />;
+                if (section.type === "image") return (
+                    <Image
+                        key={idx}
+                        src={section.src}
+                        alt={section.alt}
+                        width={800}
+                        height={600}
+                        className="w-full rounded-lg my-4"
+                        loading="lazy"
+                    />
+                );
                 if (section.type === "paragraph") return <p key={idx} className="mb-4 text-gray-700">{section.text}</p>;
                 return null;
             })}

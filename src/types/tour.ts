@@ -6,4 +6,5 @@ export interface Tour {
     storageSubPath: string;
     status?: string;
     createdAt?: string;
+    type: 'main_banner' | 'explore_tour';
 } 
