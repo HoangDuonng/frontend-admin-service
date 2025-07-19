@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Loader from "@/components/loader/page";
-import { message } from "antd";
+import React, { useState } from 'react';
+import { message } from 'antd';
+import Loader from '@/components/loader/page';
+import Image from 'next/image';
 
 interface Post {
     _id: string;
@@ -17,16 +17,13 @@ interface Post {
     link?: string;
 }
 
-const PAGE_SIZE = 5;
-
 function formatDate(dateString: string) {
-    if (!dateString) return '';
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return date.toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    });
 }
 
 type PostTableProps = {
@@ -43,11 +40,12 @@ const PostTable: React.FC<PostTableProps> = ({ posts, loading, onShowForm, onEdi
     const [selected, setSelected] = useState<string[]>([]);
     const [showConfirm, setShowConfirm] = useState(false);
     const [postToDelete, setPostToDelete] = useState<Post | null>(null);
-    const router = useRouter();
-    const error = "";
+    const [error, setError] = useState<string | null>(null);
 
-    const totalPages = Math.ceil(posts.length / PAGE_SIZE);
-    const pagedPosts = posts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const pageSize = 10;
+    const totalPages = Math.ceil(posts.length / pageSize);
+    const pagedPosts = posts.slice((page - 1) * pageSize, page * pageSize);
+
     const allChecked = selected.length === pagedPosts.length && pagedPosts.length > 0;
     const isIndeterminate = selected.length > 0 && selected.length < pagedPosts.length;
 
@@ -105,7 +103,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts, loading, onShowForm, onEdi
                 >
                     <div className="bg-blue-50 rounded-xl shadow-lg p-8 w-full max-w-sm border border-blue-200 flex flex-col items-center">
                         <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-400 mb-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 9 4.03 9 9z" />
                         </svg>
                         <div className="text-lg font-semibold text-red-600 mb-2 text-center">Bạn có chắc muốn xóa bài viết này?</div>
                         <div className="text-blue-500 mb-6 text-center">"{postToDelete.title}"</div>
@@ -170,7 +168,14 @@ const PostTable: React.FC<PostTableProps> = ({ posts, loading, onShowForm, onEdi
                                     </td>
                                     <td className="p-3">
                                         <div className="flex justify-center items-center">
-                                            <img src={b.image} alt={b.title} className="w-32 h-20 object-cover rounded-lg border" />
+                                            <Image
+                                                src={b.image}
+                                                alt={b.title}
+                                                width={128}
+                                                height={80}
+                                                className="w-32 h-20 object-cover rounded-lg border"
+                                                loading="lazy"
+                                            />
                                         </div>
                                     </td>
                                     <td className="p-3 font-medium max-w-[180px] w-48 truncate" title={b.title}>{b.title}</td>

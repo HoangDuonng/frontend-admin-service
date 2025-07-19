@@ -7,6 +7,21 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  experimental: {
+    optimizeCss: true,
+  },
+  webpack: (config, { dev, isServer }) => {
+    // Optimize CSS loading
+    if (!dev && !isServer) {
+      config.optimization.splitChunks.cacheGroups.styles = {
+        name: 'styles',
+        test: /\.(css|scss)$/,
+        chunks: 'all',
+        enforce: true,
+      };
+    }
+    return config;
+  },
   // async rewrites() {
   //   return [
   //     {
