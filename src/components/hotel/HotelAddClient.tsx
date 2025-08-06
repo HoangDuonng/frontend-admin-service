@@ -91,7 +91,7 @@ export default function HotelAddClient() {
             await addHotel(hotelData);
             hide();
             message.success('Thêm khách sạn thành công!');
-            router.push('/cms/khach-san');
+            router.push('/khach-san');
         } catch (err: any) {
             hide();
             message.error(err?.message || 'Có lỗi khi thêm khách sạn!');

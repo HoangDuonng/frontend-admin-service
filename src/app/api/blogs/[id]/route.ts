@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env.mjs';
 
+
+const baseUrl = env.NEXT_PUBLIC_CMS_API_URL;
 export const dynamic = "force-dynamic";
 
 export async function PUT(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
     const url = `${baseUrl}/api/blogs/${encodeURIComponent(params.id)}`;
     const body = await req.json();
     const res = await fetch(url, {
@@ -22,7 +24,6 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
     const url = `${baseUrl}/api/blogs/${encodeURIComponent(params.id)}`;
     const res = await fetch(url, {
         method: 'DELETE',

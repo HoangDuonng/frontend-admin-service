@@ -63,7 +63,7 @@ export default function TourListClient() {
                 <h1 className="text-3xl font-extrabold mt-6 bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text drop-shadow">
                     Danh sách Tour
                 </h1>
-                <Link href="/cms/tour/manager">
+                <Link href="/tour/manager">
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow">
                         + Thêm tour mới
                     </button>

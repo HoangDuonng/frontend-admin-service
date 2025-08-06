@@ -3,24 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa";
-
-const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
-
-interface ContentBlock {
-    type: 'heading' | 'image' | 'paragraph';
-    text?: string;
-    src?: string;
-    alt?: string;
-}
-
-interface AddPostFormProps {
-    onSuccess?: () => void;
-    showForm?: boolean;
-    setShowForm?: (show: boolean) => void;
-    initialData?: any;
-    onClose?: () => void;
-    children?: React.ReactNode;
-}
+import { ContentBlock, AddPostFormProps } from "@/types/post";
+import { uploadFile } from "@/services/fileService";
+import { createPost, updatePost } from "@/services/postService";
+import { FaUpload } from "react-icons/fa";
 
 const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showFormProp, setShowForm: setShowFormProp, initialData, onClose, children }) => {
     const [formData, setFormData] = useState({
@@ -36,8 +22,10 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showForm
     const showForm = showFormProp !== undefined ? showFormProp : internalShowForm;
     const setShowForm = setShowFormProp !== undefined ? setShowFormProp : internalSetShowForm;
     const router = useRouter();
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    // Lưu file ảnh cho từng block content (key là index)
+    const [contentImageFiles, setContentImageFiles] = useState<{ [key: number]: File | null }>({});
 
-    // Khi initialData thay đổi (bấm Sửa), fill vào form
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -107,39 +95,61 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showForm
         setLoading(true);
         setError("");
 
+        // Tạo slug từ title
+        const slugify = (str: string) =>
+            str
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/\p{Diacritic}/gu, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)+/g, '');
+        const slug = slugify(formData.title) || Math.random().toString(36).substring(2, 10);
+
         try {
-            let response;
+            // 1. Upload ảnh đại diện nếu có file
+            let imageUrl = formData.image;
+            if (imageFile) {
+                const uploadRes = await uploadFile({
+                    file: imageFile,
+                    context: 'post',
+                    entityId: slug,
+                    type: 'post',
+                    position: 'main',
+                });
+                imageUrl = uploadRes.url;
+            }
+
+            // 2. Upload ảnh trong content nếu có file
+            const newContent = await Promise.all(formData.content.map(async (block, idx) => {
+                if (block.type === 'image' && contentImageFiles[idx]) {
+                    const uploadRes = await uploadFile({
+                        file: contentImageFiles[idx]!,
+                        context: 'post',
+                        entityId: slug,
+                        type: 'post',
+                        position: 'content',
+                    });
+                    return { ...block, src: uploadRes.url };
+                }
+                return block;
+            }));
+
+            let result;
             if (initialData && initialData._id) {
-                // EDIT: Gọi PUT qua Next.js API route bằng ID
-                response = await fetch(`/api/blogs/${initialData._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...formData,
-                        date: new Date().toISOString()
-                    }),
+                result = await updatePost(initialData._id, {
+                    ...formData,
+                    image: imageUrl,
+                    content: newContent,
+                    date: new Date().toISOString()
                 });
             } else {
-                // CREATE: Gọi POST 
-                response = await fetch(`${baseUrl}/api/blogs`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...formData,
-                        date: new Date().toISOString()
-                    }),
+                result = await createPost({
+                    ...formData,
+                    image: imageUrl,
+                    content: newContent,
+                    date: new Date().toISOString()
                 });
             }
-
-            if (!response.ok) {
-                throw new Error('Failed to save post');
-            }
-
-            const result = await response.json();
 
             // Reset form
             setFormData({
@@ -149,6 +159,8 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showForm
                 status: "draft",
                 content: []
             });
+            setImageFile(null);
+            setContentImageFiles({});
             setLoading(false);
             if (onClose) onClose();
             if (onSuccess) onSuccess();
@@ -217,13 +229,28 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showForm
 
                 {block.type === 'image' && (
                     <div className="space-y-3">
-                        <input
-                            type="url"
-                            value={block.src || ''}
-                            onChange={(e) => updateContentBlock(index, 'src', e.target.value)}
-                            placeholder="URL hình ảnh..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-500 dark:border-gray-400 dark:text-white"
-                        />
+                        <div className="flex items-center gap-2">
+                            <label htmlFor={`content-image-upload-${index}`} className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-blue-100 rounded-lg border border-gray-300 hover:bg-blue-200">
+                                <FaUpload className="text-blue-600" />
+                                <span className="text-gray-700 dark:text-gray-300 text-sm">Chọn ảnh</span>
+                                <input
+                                    type="file"
+                                    id={`content-image-upload-${index}`}
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={e => {
+                                        const files = e.target.files;
+                                        if (files && files[0]) {
+                                            setContentImageFiles(prev => ({ ...prev, [index]: files[0] }));
+                                            updateContentBlock(index, 'src', URL.createObjectURL(files[0]));
+                                        }
+                                    }}
+                                />
+                            </label>
+                            {contentImageFiles[index] && (
+                                <span className="text-xs text-gray-500">{contentImageFiles[index]?.name}</span>
+                            )}
+                        </div>
                         <input
                             type="text"
                             value={block.alt || ''}
@@ -294,18 +321,30 @@ const AddPostForm: React.FC<AddPostFormProps> = ({ onSuccess, showForm: showForm
 
                     <div className="flex flex-col gap-2 mb-2">
                         <label htmlFor="image" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            URL ảnh đại diện *
+                            Ảnh đại diện *
                         </label>
-                        <input
-                            type="url"
-                            id="image"
-                            name="image"
-                            value={formData.image}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                            placeholder="https://example.com/image.jpg"
-                        />
+                        <div className="flex items-center gap-2">
+                            <label htmlFor="image-upload" className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-blue-100 rounded-lg border border-gray-300 hover:bg-gray-200">
+                                <FaUpload className="text-blue-600" />
+                                <span className="text-gray-700 dark:text-gray-300 text-sm">Chọn ảnh</span>
+                                <input
+                                    type="file"
+                                    id="image-upload"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={e => {
+                                        const files = e.target.files;
+                                        if (files && files[0]) {
+                                            setImageFile(files[0]);
+                                            setFormData(prev => ({ ...prev, image: URL.createObjectURL(files[0]) }));
+                                        }
+                                    }}
+                                />
+                            </label>
+                            {imageFile && (
+                                <span className="text-xs text-gray-500">{imageFile.name}</span>
+                            )}
+                        </div>
                         {formData.image && (
                             <div className="mt-2">
                                 <img

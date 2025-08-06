@@ -1,9 +1,13 @@
 import { Role, Permission } from '@/types/role-permission';
 
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJjbGllbnQiXSwic3ViIjoidGVzdHVzZXIxNSIsImlhdCI6MTc1MjgyMzA5OSwiZXhwIjoxNzUyOTA5NDk5fQ.EdjkVexdMTFf59KgaOhktNl_lbwnCwgWyA3lavXlbmQ';
+import { env } from '@/env.mjs';
 
 export async function getRoles(): Promise<Role[]> {
-    const res = await fetch('/api/role-permission/list', {
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
+    const url = `${baseUrl}/api/role-permission/list`;
+    const res = await fetch(url, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -14,7 +18,10 @@ export async function getRoles(): Promise<Role[]> {
 }
 
 export async function getPermissions(): Promise<Permission[]> {
-    const res = await fetch('/api/role-permission/permissions', {
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
+    const url = `${baseUrl}/api/role-permission/permissions`;
+    const res = await fetch(url, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -61,7 +68,10 @@ export async function updatePermission(id: string, data: Partial<Permission>) {
 }
 
 export async function getRoleById(id: string): Promise<Role> {
-    const res = await fetch(`/api/role-permission/list/${id}`, {
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
+    const url = `${baseUrl}/api/role-permission/list/${id}`;
+    const res = await fetch(url, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -72,7 +82,10 @@ export async function getRoleById(id: string): Promise<Role> {
 }
 
 export async function getPermissionById(id: string): Promise<Permission> {
-    const res = await fetch(`/api/role-permission/permissions/${id}`, {
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
+    const url = `${baseUrl}/api/role-permission/permissions/${id}`;
+    const res = await fetch(url, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -90,7 +103,7 @@ export async function deleteRole(id: string) {
         },
     });
 
-    // Nếu response thành công (2xx), coi như xóa thành công
+    // Nếu response thành công (2xx), coi như xoá thành công
     if (res.ok) {
         try {
             const data = await res.json();
@@ -116,7 +129,7 @@ export async function deletePermission(id: string) {
         },
     });
 
-    // Nếu response thành công (2xx), coi như xóa thành công
+    // Nếu response thành công (2xx), coi như xoá thành công
     if (res.ok) {
         try {
             const data = await res.json();

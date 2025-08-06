@@ -92,7 +92,7 @@ export default function HotelListClient() {
                 <div className="flex gap-2">
                     <button
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow"
-                        onClick={() => router.push("/cms/khach-san/manager")}
+                        onClick={() => router.push("/khach-san/manager")}
                     >
                         + Thêm khách sạn mới
                     </button>
@@ -191,7 +191,7 @@ export default function HotelListClient() {
                                 )}
                             </td>
                             <td className="p-3 text-center">
-                                <button className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded mr-2" onClick={() => router.push(`/cms/khach-san/edit/${hotel.document_id}`)}>Sửa</button>
+                                <button className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded mr-2" onClick={() => router.push(`/khach-san/edit/${hotel.document_id}`)}>Sửa</button>
                                 <button className="px-2 py-1 bg-red-100 text-red-700 rounded" onClick={() => handleDelete(hotel)}>Xoá</button>
                             </td>
                         </tr>

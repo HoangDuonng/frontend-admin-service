@@ -96,7 +96,7 @@ export default function HotelEditClient() {
             await updateHotel(documentId, hotelData);
             hide();
             message.success('Cập nhật khách sạn thành công!');
-            router.push('/cms/khach-san');
+            router.push('/khach-san');
         } catch (err: any) {
             hide();
             message.error(err?.message || 'Có lỗi khi cập nhật khách sạn!');
