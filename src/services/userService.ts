@@ -1,13 +1,40 @@
 import { UserListResponse } from '@/types/user';
+import { LoginRequest, LoginResponse } from '@/types/auth';
+import { env } from '@/env.mjs';
 
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJjbGllbnQiXSwic3ViIjoidGVzdHVzZXIxNSIsImlhdCI6MTc1MjkyMTU0NywiZXhwIjoxNzUzMDA3OTQ3fQ.P7R7mij96mbQ6MYBuj4Epsj5ljuOe8-Qs9rOylvgp-I';
+
+export async function login(loginData: LoginRequest): Promise<LoginResponse> {
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginData),
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.message || 'Đăng nhập thất bại');
+        }
+
+        return data.data;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export async function getUsers(page = 1, pageSize = 10, filter = ''): Promise<UserListResponse> {
     // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
 
     const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
     if (filter) params.append('filter', filter);
-    const res = await fetch(`/api/user/list?${params.toString()}`, {
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL : '';
+    const url = `${baseUrl}/api/user/list?${params.toString()}`;
+    const res = await fetch(url, {
         headers: {
             'Authorization': token ? `Bearer ${token}` : '',
         },
@@ -91,4 +118,6 @@ export async function deleteUser(id: string | number): Promise<any> {
     });
     if (!res.ok) throw new Error('Xoá người dùng thất bại');
     return await res.json();
-} 
+}
+
+

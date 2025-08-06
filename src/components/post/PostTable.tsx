@@ -194,7 +194,7 @@ const PostTable: React.FC<PostTableProps> = ({ posts, loading, onShowForm, onEdi
                                             <button
                                                 className="px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-semibold text-xs hover:bg-blue-100 transition"
                                                 onClick={() => {
-                                                    window.location.href = `/cms/tin-tuc/${b.slug}`;
+                                                    window.location.href = `/tin-tuc/${b.slug}`;
                                                 }}
                                             >
                                                 Xem

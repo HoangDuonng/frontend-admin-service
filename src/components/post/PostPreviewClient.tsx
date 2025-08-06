@@ -35,7 +35,7 @@ export default function PostPreviewClient({ slug }: { slug: string }) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh]">
                 <p className="text-xl text-red-600 font-semibold">Bài viết không tồn tại.</p>
-                <button onClick={() => router.push('/cms/tin-tuc')} className="mt-4 px-4 py-2 rounded bg-blue-600 text-white">Quay lại</button>
+                <button onClick={() => router.push('/tin-tuc')} className="mt-4 px-4 py-2 rounded bg-blue-600 text-white">Quay lại</button>
             </div>
         );
     }
@@ -52,7 +52,7 @@ export default function PostPreviewClient({ slug }: { slug: string }) {
 
     return (
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 mt-8">
-            <button onClick={() => router.push('/cms/tin-tuc')} className="mb-4 px-4 py-2 rounded bg-blue-200 text-gray-700 hover:bg-gray-300">← Quay lại</button>
+            <button onClick={() => router.push('/tin-tuc')} className="mb-4 px-4 py-2 rounded bg-blue-200 text-gray-700 hover:bg-gray-300">← Quay lại</button>
             {post.image && (
                 <Image
                     src={post.image}

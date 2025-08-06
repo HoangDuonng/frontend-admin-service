@@ -76,6 +76,19 @@
   }
 }
 
+/* Login page styles - hide layout elements */
+body.login-page header,
+body.login-page aside,
+body.login-page footer {
+  display: none !important;
+}
+
+body.login-page main {
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+}
+
 /* Loading bar style */
 .loader {
   width: 120px;

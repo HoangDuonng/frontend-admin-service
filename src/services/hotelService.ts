@@ -2,7 +2,10 @@ import { Hotel } from '@/types/hotel';
 import { env } from '@/env.mjs';
 
 export async function getHotels(): Promise<Hotel[]> {
-    const res = await fetch('/api/hotel');
+    const isServer = typeof window === 'undefined';
+    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL : '';
+    const url = `${baseUrl}/api/hotel`;
+    const res = await fetch(url);
     if (!res.ok) throw new Error('Failed to fetch hotels');
     const data = await res.json();
 
