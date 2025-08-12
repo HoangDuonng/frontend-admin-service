@@ -3,13 +3,15 @@ import { env } from '@/env.mjs';
 
 export const dynamic = "force-dynamic";
 
-const API_TOUR_URL = env.NEXT_PUBLIC_FILE_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function POST(req: NextRequest) {
     const contentType = req.headers.get('content-type') || '';
     const body = await req.arrayBuffer();
 
-    const backendRes = await fetch(`${API_TOUR_URL}/api/tours/upload`, {
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/tours`, {
         method: 'POST',
         headers: {
             'Content-Type': contentType,
@@ -29,9 +31,11 @@ export async function GET(req: NextRequest) {
     const tourId = searchParams.get('tourId');
     let backendUrl = '';
     if (tourId) {
-        backendUrl = `${API_TOUR_URL}/api/tours/${tourId}`;
+        // Gọi qua Kong gateway
+        backendUrl = `${KONG_GATEWAY_URL}/tours?tourId=${tourId}`;
     } else {
-        backendUrl = `${API_TOUR_URL}/api/tours`;
+        // Gọi qua Kong gateway
+        backendUrl = `${KONG_GATEWAY_URL}/tours`;
     }
     const backendRes = await fetch(backendUrl, {
         method: 'GET',

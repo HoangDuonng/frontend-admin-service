@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env.mjs';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function GET(req: NextRequest) {
     const search = req.nextUrl.search;
-    const res = await fetch(`${BACKEND_URL}/api/footer${search}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/footer${search}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });
@@ -15,7 +19,9 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     const search = req.nextUrl.search;
     const body = await req.text();
-    const res = await fetch(`${BACKEND_URL}/api/footer${search}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/footer${search}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body,

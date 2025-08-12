@@ -3,9 +3,13 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
+
 export async function GET(req: NextRequest) {
     try {
-        const res = await fetch(`${env.NEXT_PUBLIC_CMS_API_URL}/api/layouts/banners/all-raw`, {
+        // Gọi qua Kong gateway
+        const res = await fetch(`${KONG_GATEWAY_URL}/banners/all-raw`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

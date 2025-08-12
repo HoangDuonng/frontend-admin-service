@@ -3,14 +3,16 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const BACKEND_URL = env.NEXT_PUBLIC_CMS_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function GET(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
     try {
-        const res = await fetch(`${BACKEND_URL}/api/banners/${encodeURIComponent(params.id)}`, {
+        // Gọi qua Kong gateway
+        const res = await fetch(`${KONG_GATEWAY_URL}/banners/${encodeURIComponent(params.id)}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -30,7 +32,9 @@ export async function PUT(
 ) {
     try {
         const body = await req.json();
-        const res = await fetch(`${BACKEND_URL}/api/layouts/${encodeURIComponent(params.id)}`, {
+
+        // Gọi qua Kong gateway
+        const res = await fetch(`${KONG_GATEWAY_URL}/banners/${encodeURIComponent(params.id)}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -50,7 +54,8 @@ export async function DELETE(
     { params }: { params: { id: string } }
 ) {
     try {
-        const res = await fetch(`${BACKEND_URL}/api/banners/${encodeURIComponent(params.id)}`, {
+        // Gọi qua Kong gateway
+        const res = await fetch(`${KONG_GATEWAY_URL}/banners/${encodeURIComponent(params.id)}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         });

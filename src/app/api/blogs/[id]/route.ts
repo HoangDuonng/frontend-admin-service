@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
-const baseUrl = env.NEXT_PUBLIC_CMS_API_URL;
 export const dynamic = "force-dynamic";
 
 export async function PUT(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const url = `${baseUrl}/api/blogs/${encodeURIComponent(params.id)}`;
+    // Gọi qua Kong gateway
+    const url = `${KONG_GATEWAY_URL}/blogs/${encodeURIComponent(params.id)}`;
     const body = await req.json();
     const res = await fetch(url, {
         method: 'PUT',
@@ -24,7 +26,8 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const url = `${baseUrl}/api/blogs/${encodeURIComponent(params.id)}`;
+    // Gọi qua Kong gateway
+    const url = `${KONG_GATEWAY_URL}/blogs/${encodeURIComponent(params.id)}`;
     const res = await fetch(url, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
-const AUTH_API_URL = env.NEXT_PUBLIC_AUTHORIZATION_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function GET(req: NextRequest) {
     const token = req.headers.get('authorization');
-    const res = await fetch(`${AUTH_API_URL}/api/roles`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/roles`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -15,4 +18,3 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
 }
- 

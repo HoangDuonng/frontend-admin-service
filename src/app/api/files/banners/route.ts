@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
-const FILE_SERVICE_URL = env.NEXT_PUBLIC_FILE_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function POST(req: NextRequest) {
     try {
-        const url = `${FILE_SERVICE_URL}/api/files/banners`;
+        // Gọi qua Kong gateway
+        const url = `${KONG_GATEWAY_URL}/files/banners`;
         const headers = new Headers(req.headers);
         headers.delete('host');
 

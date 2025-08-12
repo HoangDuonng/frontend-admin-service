@@ -3,12 +3,15 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const AUTH_API_URL = env.NEXT_PUBLIC_AUTHORIZATION_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     const token = req.headers.get('authorization');
     const body = await req.text();
-    const res = await fetch(`${AUTH_API_URL}/api/roles/${params.id}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/role-permission/list/${params.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -23,7 +26,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     const token = req.headers.get('authorization');
     try {
-        const res = await fetch(`${AUTH_API_URL}/api/roles/${params.id}`, {
+        // Gọi qua Kong gateway
+        const res = await fetch(`${KONG_GATEWAY_URL}/role-permission/list/${params.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +55,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
     const token = req.headers.get('authorization');
-    const res = await fetch(`${AUTH_API_URL}/api/roles/${params.id}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/role-permission/list/${params.id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

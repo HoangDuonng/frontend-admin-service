@@ -3,10 +3,12 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const API_HOTEL_URL = env.NEXT_PUBLIC_HOTEL_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-    const backendRes = await fetch(`${API_HOTEL_URL}/api/hotels/${params.id}`, {
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/hotel/${params.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
     });
@@ -19,7 +21,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     const body = await req.json();
-    const backendRes = await fetch(`${API_HOTEL_URL}/api/hotels/${params.id}`, {
+
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/hotel/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -32,7 +36,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-    const backendRes = await fetch(`${API_HOTEL_URL}/api/hotels/${params.id}`, {
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/hotel/${params.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
     });

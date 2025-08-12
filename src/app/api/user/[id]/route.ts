@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
-const USER_API_URL = env.NEXT_PUBLIC_USER_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     const token = req.headers.get('authorization');
@@ -10,7 +11,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         'Content-Type': 'application/json',
     };
     if (token) headers['Authorization'] = token;
-    const res = await fetch(`${USER_API_URL}/api/users/${params.id}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/user/${params.id}`, {
         method: 'PUT',
         headers,
         body,
@@ -25,7 +28,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     const token = req.headers.get('authorization');
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = token;
-    const res = await fetch(`${USER_API_URL}/api/users/${params.id}`, {
+
+    // Gọi qua Kong gateway
+    const res = await fetch(`${KONG_GATEWAY_URL}/user/${params.id}`, {
         method: 'DELETE',
         headers,
     });

@@ -1,11 +1,7 @@
 import { Tour } from '@/types/tour';
-import { env } from '@/env.mjs';
 
 export async function getTours(): Promise<Tour[]> {
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
-    const url = `${baseUrl}/api/tours`;
-    const res = await fetch(url);
+    const res = await fetch('/api/tours');
     if (!res.ok) throw new Error('Failed to fetch tours');
     const data = await res.json();
     return data.data || [];

@@ -1,13 +1,9 @@
 import { Role, Permission } from '@/types/role-permission';
 
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJjbGllbnQiXSwic3ViIjoidGVzdHVzZXIxNSIsImlhdCI6MTc1MjgyMzA5OSwiZXhwIjoxNzUyOTA5NDk5fQ.EdjkVexdMTFf59KgaOhktNl_lbwnCwgWyA3lavXlbmQ';
-import { env } from '@/env.mjs';
 
 export async function getRoles(): Promise<Role[]> {
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
-    const url = `${baseUrl}/api/role-permission/list`;
-    const res = await fetch(url, {
+    const res = await fetch('/api/role-permission/list', {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -18,10 +14,7 @@ export async function getRoles(): Promise<Role[]> {
 }
 
 export async function getPermissions(): Promise<Permission[]> {
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
-    const url = `${baseUrl}/api/role-permission/permissions`;
-    const res = await fetch(url, {
+    const res = await fetch('/api/role-permission/permissions', {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -68,10 +61,7 @@ export async function updatePermission(id: string, data: Partial<Permission>) {
 }
 
 export async function getRoleById(id: string): Promise<Role> {
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
-    const url = `${baseUrl}/api/role-permission/list/${id}`;
-    const res = await fetch(url, {
+    const res = await fetch(`/api/role-permission/list/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -82,10 +72,7 @@ export async function getRoleById(id: string): Promise<Role> {
 }
 
 export async function getPermissionById(id: string): Promise<Permission> {
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001' : '';
-    const url = `${baseUrl}/api/role-permission/permissions/${id}`;
-    const res = await fetch(url, {
+    const res = await fetch(`/api/role-permission/permissions/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
