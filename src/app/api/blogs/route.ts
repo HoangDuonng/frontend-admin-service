@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env.mjs';
 
 export const dynamic = "force-dynamic";
 
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
+
 export async function GET(req: NextRequest) {
-    const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
-    const url = `${baseUrl}/api/blogs${req.nextUrl.search}`;
+    // Gọi qua Kong gateway
+    const url = `${KONG_GATEWAY_URL}/blogs${req.nextUrl.search}`;
     try {
         const res = await fetch(url);
         const data = await res.json();
@@ -15,8 +19,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:8086';
-    const url = `${baseUrl}/api/blogs`;
+    // Gọi qua Kong gateway
+    const url = `${KONG_GATEWAY_URL}/blogs`;
 
     try {
         const body = await req.json();

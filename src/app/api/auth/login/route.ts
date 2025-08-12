@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
-const API_BASE_URL = env.NEXT_PUBLIC_AUTH_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function POST(request: NextRequest) {
     try {
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        // Gọi qua Kong gateway
+        const response = await fetch(`${KONG_GATEWAY_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

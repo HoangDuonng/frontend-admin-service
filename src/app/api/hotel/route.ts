@@ -3,10 +3,12 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const API_HOTEL_URL = env.NEXT_PUBLIC_HOTEL_API_URL;
+// Sử dụng Kong gateway thay vì gọi trực tiếp backend
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
 
 export async function GET(req: NextRequest) {
-    const backendRes = await fetch(`${API_HOTEL_URL}/api/hotels`, {
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/hotel`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -21,7 +23,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
-    const backendRes = await fetch(`${API_HOTEL_URL}/api/hotels`, {
+
+    // Gọi qua Kong gateway
+    const backendRes = await fetch(`${KONG_GATEWAY_URL}/hotel`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

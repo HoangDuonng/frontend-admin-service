@@ -1,6 +1,5 @@
 import { UserListResponse } from '@/types/user';
 import { LoginRequest, LoginResponse } from '@/types/auth';
-import { env } from '@/env.mjs';
 
 const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJjbGllbnQiXSwic3ViIjoidGVzdHVzZXIxNSIsImlhdCI6MTc1MjkyMTU0NywiZXhwIjoxNzUzMDA3OTQ3fQ.P7R7mij96mbQ6MYBuj4Epsj5ljuOe8-Qs9rOylvgp-I';
 
@@ -27,14 +26,10 @@ export async function login(loginData: LoginRequest): Promise<LoginResponse> {
 }
 
 export async function getUsers(page = 1, pageSize = 10, filter = ''): Promise<UserListResponse> {
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
-
     const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
     if (filter) params.append('filter', filter);
-    const isServer = typeof window === 'undefined';
-    const baseUrl = isServer ? env.NEXT_PUBLIC_BASE_URL : '';
-    const url = `${baseUrl}/api/user/list?${params.toString()}`;
-    const res = await fetch(url, {
+
+    const res = await fetch(`/api/user/list?${params.toString()}`, {
         headers: {
             'Authorization': token ? `Bearer ${token}` : '',
         },
@@ -44,8 +39,6 @@ export async function getUsers(page = 1, pageSize = 10, filter = ''): Promise<Us
 }
 
 export async function getUserRole(userId: string | number): Promise<string[]> {
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
-
     const res = await fetch(`/api/roles/user/${userId}`, {
         headers: {
             'Authorization': token ? `Bearer ${token}` : '',
@@ -60,8 +53,6 @@ export async function getUserRole(userId: string | number): Promise<string[]> {
 }
 
 export async function getAllRoles(): Promise<{ displayName: string; value: string }[]> {
-
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
     const res = await fetch('/api/roles', {
         headers: {
             'Authorization': token ? `Bearer ${token}` : '',
@@ -76,9 +67,6 @@ export async function getAllRoles(): Promise<{ displayName: string; value: strin
 }
 
 export async function updateUser(id: string | number, data: any): Promise<any> {
-
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
-
     console.log('Sending request to update user:', {
         url: `/api/user/${id}`,
         method: 'PUT',
@@ -95,7 +83,6 @@ export async function updateUser(id: string | number, data: any): Promise<any> {
         body: JSON.stringify(data),
     });
 
-
     if (!res.ok) {
         const errorText = await res.text();
         console.error('Error response:', errorText);
@@ -107,9 +94,6 @@ export async function updateUser(id: string | number, data: any): Promise<any> {
 }
 
 export async function deleteUser(id: string | number): Promise<any> {
-
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
-
     const res = await fetch(`/api/user/${id}`, {
         method: 'DELETE',
         headers: {
