@@ -4,14 +4,14 @@ import { env } from '@/env.mjs';
 export const dynamic = 'force-dynamic';
 
 // Sử dụng Kong gateway thay vì gọi trực tiếp backend
-const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://kong:8000/v1/api';
 
 export async function GET(req: NextRequest) {
     try {
         const search = req.nextUrl.search;
 
         // Gọi qua Kong gateway
-        const res = await fetch(`${KONG_GATEWAY_URL}/banners${search}`, {
+        const res = await fetch(`${KONG_GATEWAY_URL}/cms/layouts/banners${search}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
 
         // Gọi qua Kong gateway
-        const res = await fetch(`${KONG_GATEWAY_URL}/banners`, {
+        const res = await fetch(`${KONG_GATEWAY_URL}/cms/layouts/banners`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),

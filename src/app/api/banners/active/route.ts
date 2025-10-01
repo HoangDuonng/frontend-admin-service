@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { env } from '@/env.mjs';
 
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://kong:8000/v1/api';
+
 export async function GET(req: NextRequest) {
     try {
-        const res = await fetch(`${env.NEXT_PUBLIC_CMS_API_URL}/api/layouts/banners/active`, {
+        const res = await fetch(`${KONG_GATEWAY_URL}/cms/layouts/banners/active`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
