@@ -27,14 +27,6 @@ const nextConfig = {
     }
     return config;
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/plugins/:path*',
-  //       destination: `${process.env.NEXT_PUBLIC_FILE_API_URL}/static_files/tours/tour01/Con_Dao/plugins/:path*`,
-  //     },
-  //   ];
-  // },
 };
 
 module.exports = withSvgr(nextConfig); 
