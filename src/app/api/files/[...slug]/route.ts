@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env.mjs';
 
 // Sử dụng Kong gateway thay vì gọi trực tiếp backend
-const KONG_GATEWAY_URL = process.env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://kong:8000/v1/api';
 
 export async function GET(req: NextRequest, { params }: { params: { slug: string[] } }) {
     const slugPath = params.slug.join('/');
     // Gọi qua Kong gateway
-    const url = `${KONG_GATEWAY_URL}/files/${slugPath}`;
+    const url = `${KONG_GATEWAY_URL}/handlefile/files/${slugPath}`;
     const res = await fetch(url, { method: 'GET' });
     const contentType = res.headers.get('content-type');
     const buffer = await res.arrayBuffer();
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest, { params }: { params: { slug: string
 export async function DELETE(req: NextRequest, { params }: { params: { slug: string[] } }) {
     const slugPath = params.slug.join('/');
     // Gọi qua Kong gateway
-    const url = `${KONG_GATEWAY_URL}/files/${slugPath}`;
+    const url = `${KONG_GATEWAY_URL}/handlefile/files/${slugPath}`;
     const res = await fetch(url, { method: 'DELETE' });
     const contentType = res.headers.get('content-type');
     const data = contentType?.includes('application/json') ? await res.json() : await res.text();
@@ -29,7 +30,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { slug: str
 export async function POST(req: NextRequest, { params }: { params: { slug: string[] } }) {
     const slugPath = params.slug.join('/');
     // Gọi qua Kong gateway
-    const url = `${KONG_GATEWAY_URL}/files/${slugPath}`;
+    const url = `${KONG_GATEWAY_URL}/handlefile/files/${slugPath}`;
     const headers = new Headers(req.headers);
     headers.delete('host');
     const res = await fetch(url, {
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
 export async function PUT(req: NextRequest, { params }: { params: { slug: string[] } }) {
     const slugPath = params.slug.join('/');
     // Gọi qua Kong gateway
-    const url = `${KONG_GATEWAY_URL}/files/${slugPath}`;
+    const url = `${KONG_GATEWAY_URL}/handlefile/files/${slugPath}`;
     const headers = new Headers(req.headers);
     headers.delete('host');
     const res = await fetch(url, {

@@ -3,14 +3,14 @@ import { env } from '@/env.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://localhost:8000';
+const KONG_GATEWAY_URL = env.NEXT_PUBLIC_KONG_GATEWAY_URL || 'http://kong:8000/v1/api';
 
 export async function GET(req: NextRequest) {
     const search = req.nextUrl.search;
     const token = req.headers.get('authorization');
 
     try {
-        const res = await fetch(`${KONG_GATEWAY_URL}/user/list${search}`, {
+        const res = await fetch(`${KONG_GATEWAY_URL}/users${search}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
